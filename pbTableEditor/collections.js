@@ -1,7 +1,7 @@
 
 /*
    This is just a sample.
-   You can create such a file by using the pocket base export collections feature
+   You can create such a file by using the pocketbase export collections feature
 
 */
 
