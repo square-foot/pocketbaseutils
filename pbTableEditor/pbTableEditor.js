@@ -20,6 +20,9 @@ var editRecord;
 var getVal;
 var doSel;
 
+let jsonSchema =  {};
+let jsonEditors = {}; //Various jsonEditors are in this hash
+
 (function () {
 
 let globGetRecords
@@ -27,34 +30,42 @@ let globDelRecord
 let globCreateRecord
 let globUpdateRecord
 let globMultiDelRecords
+let lastPrompt
 let relations 
-
 let lastCollection 
 let lastTableContainer
 
+
 function reGenerateEditorTable()
      {
-         console.log("Regenerating...")
+       
         generateEditorTable(lastCollection,lastTableContainer,
+            lastPrompt,
             globGetRecords,
             globDelRecord ,
             globCreateRecord,
             globUpdateRecord,
             globMultiDelRecords,
-            relations
+            relations,
+            jsonSchema
             )
 
      }
 
 generateEditorTable = function (collection,tableContainer,
+            prompt,
             globGetRecFunc,
             globDelFunc,
             globCreateFunc,
             globUpdateFunc,
             globMultiDelFunc,
-            whichRelations
+            whichRelations,
+            jsonSchemaObj
             ) {
-    
+
+    jsonSchema = jsonSchemaObj            
+    lastPrompt = prompt
+
                 //function pointers
     globGetRecords=globGetRecFunc
     globDelRecord =globDelFunc
@@ -62,19 +73,31 @@ generateEditorTable = function (collection,tableContainer,
     globUpdateRecord=globUpdateFunc
     globMultiDelRecords = globMultiDelFunc
     relations = whichRelations 
-
-    //Get records just in time
-    let records = globGetRecords(collection.name)
-
-               
+    
     lastCollection = collection 
     lastTableContainer = tableContainer
-            
 
+    
     const tableID = `${collection.name}Table`
     const existTableContainer = document.getElementById(tableContainer)
     existTableContainer.innerHTML=''; 
+
+    //Get records just in time
+    records = null 
     
+    globGetRecords(collection.name)
+    
+    // start polling at an interval until the data is found at the global
+    var intvl = setInterval(function() {
+    
+    //Timer repeats every 100 ms to check if the async function has finished! 
+    //If indeed records have finally arrived ... then do the rest of the logic!
+    
+    if (records) 
+     { 
+    
+    clearInterval(intvl); //this is critical. Timer must stop once records are found!
+ 
     const table = document.createElement('table')
     table.setAttribute('role','grid')
 
@@ -117,14 +140,29 @@ generateEditorTable = function (collection,tableContainer,
             const cell = row.insertCell(index + 1)
             cell.setAttribute('align','left')
             cell.setAttribute('valign','top')
-    
-            cell.innerHTML = record[field.name]
-            
+
+            switch(field.type){
+                case 'json': 
+                        cell.innerHTML = JSON.stringify(record[field.name])
+                        break
+                case 'relation':
+                        
+                        try {
+                             cell.innerHTML = record.expand[field.name][field.options.displayFields[0]] //username
+                        }  catch(e){
+                            
+                            cell.innerHTML = ''
+                        }
+                        break
+                default: 
+                        cell.innerHTML = record[field.name]
+                        break
+              }
+          })
+
         })
-
-
      
-            })
+    
 
     // Create edit form
     const oeditForm = document.createElement('div') 
@@ -199,6 +237,11 @@ generateEditorTable = function (collection,tableContainer,
     
     const cont = document.getElementById(tableContainer)
     cont.appendChild(createHTMLElem(`<h4> ${firstUpperCase(collection.name)} </h4>`))
+
+    const promptSpan = document.createElement('span')
+    promptSpan.innerHTML = prompt 
+    cont.appendChild(promptSpan)
+
     const details = document.createElement('details')
     details.setAttribute('id','theDetails')
     const summary = document.createElement('summary')
@@ -206,9 +249,9 @@ generateEditorTable = function (collection,tableContainer,
     details.appendChild(summary)
     details.appendChild(oeditForm)
     cont.appendChild(details)
-    
- 
-    
+
+
+      
     if(records.length > 0 ){
  
         const delSel  = document.createElement('a')
@@ -218,9 +261,12 @@ generateEditorTable = function (collection,tableContainer,
     
         delSel.setAttribute("onclick","alert('Nothing selected');return false")
         delSel.textContent= 'Delete selected'
+        
+       
         cont.appendChild(delSel)
+
      
-        cont.appendChild(document.createElement('hr'))
+       
         const tablediv = document.createElement('div')
         tablediv.setAttribute('style','overflow-x: auto;max-width: 100%; white-space: nowrap;')
         tablediv.appendChild(table)
@@ -228,11 +274,23 @@ generateEditorTable = function (collection,tableContainer,
     } else {
         document.getElementById("theDetails").open=true
         document.getElementById('updbtn').disabled=true
-    }
+       }
+
+    
+                    
+    } //records were found 
+
+},
+  100 //ms interval check
+  ); 
+
+
+    
+    
 }
 
 function firstUpperCase(s){
-    return s.charAt(0).toUpperCase() + s.slice(1)
+    return s.charAt(0).toUpperCase() + s.replace('_',' ').slice(1)
  }
  
 
@@ -243,8 +301,33 @@ function createHTMLElem(htmlString) {
     return div.firstChild
   }
 
-  getVal = function  (Id){
-    return document.getElementById(Id).value
+  getVal = function  (Id,Type){
+        
+
+        if(Type && (Type == 'json')){
+            
+                let obj
+                try {
+                obj = JSON.parse(document.getElementById(Id).value)
+                 
+                } catch(e){
+                    obj= {}
+                }
+             return obj   
+        }
+
+        let val = document.getElementById(Id).value
+        
+        if(Type && (Type == 'date')){
+        try{
+            const date = new Date(val)
+            val = date.toISOString()
+            val = val.replace('T',' ')
+          }catch(e){
+             val = ''
+          }
+        }
+        return val 
   } 
 
 
@@ -253,14 +336,33 @@ function getProperInput(field){
     switch(field.type) {
 
         case "text":
+             if (field.options.max) {
+                //If max length was set, it is assumed that this is actually a textarea element and NOT "input type=text"         
+                input = document.createElement('textarea')
+                input.setAttribute('rows','6')
+                input.setAttribute('cols','60')
+                input.setAttribute('maxlength',field.options.max)
+                
+             } else
+              { 
+              input = document.createElement('input')
+              }
+             break
+
+
         case "number": 
+             input = document.createElement('input')
+             input.setAttribute('type','number')
+             break
+
         case "url":
-          input = document.createElement('input')
-          break
+             input = document.createElement('input')
+         
+             break
           
         case "date":
-          input = document.createElement('input')
-          input.setAttribute('type','datetime-local')
+             input = document.createElement('input')
+             input.setAttribute('type','datetime-local')
           break
           
 
@@ -268,9 +370,33 @@ function getProperInput(field){
             input = document.createElement('input')
             input.setAttribute('type','checkbox')
             break
-            
-        case "editor": 
+
         case "json":
+            
+            input = document.createElement('details')
+            const JField = `json_${field.name}`
+            input.setAttribute('id',JField)
+            const jSummary =document.createElement('summary')
+            jSummary.innerText='Data Editor'
+            input.appendChild(jSummary)
+            let fieldProperties = jsonSchema[field.name]
+            
+            const jsoneditor = new JSONEditor(input, {
+                compact: true,
+                disable_collapse: true,
+                no_additional_properties: true,
+                disable_properties: true,
+                disable_edit_json: true,
+                schema:{
+                    "title": " ",
+                    "type": "object",
+                    "properties": fieldProperties
+                }
+            })
+            jsonEditors[JField] = jsoneditor
+            break
+
+        case "editor": 
           input = document.createElement('textarea')
           input.setAttribute('rows','6')
           input.setAttribute('cols','60')
@@ -280,11 +406,14 @@ function getProperInput(field){
         
         case "relation":
             input = document.createElement('select')
+            if(!field.options.maxSelect) {
+                input.setAttribute('multiple',true)  
+            }
             let rels = relations[field.name] 
             if(rels)
               rels.forEach((e)=>{
                 const optionElement = document.createElement('option')
-                optionElement.textContent = e.text
+                optionElement.textContent = e[  field.options.displayFields[0]  ]//username
                 optionElement.value = e.id
     
                 input.appendChild(optionElement)
@@ -293,6 +422,9 @@ function getProperInput(field){
         case "select":
            let options = field.options.values
            input = document.createElement('select')
+           if (field.options.maxSelect > 1) {
+              input.setAttribute('multiple',true)
+           }
            for (const optionText of options) {
             const optionElement = document.createElement('option')
             optionElement.textContent = optionText
@@ -327,8 +459,45 @@ editRecord = function (collectionName, recordId) {
         if (record.id === recordId) {
             collection.schema.forEach(field => {
                 const input = document.getElementById(`${collectionName}_${field.name}`)
-                input.value = record[field.name]
-            })
+                //NOTE: input field for JSON is undefined above!
+                switch(field.type) 
+                 {
+                    case 'json':
+                            jsonEditors[`json_${field.name}`].setValue(record[field.name])
+                            //input.value = JSON.stringify(record[field.name])
+                            break    
+                   
+                    case 'relation':
+                           try {
+                             input.value = record.expand[field.name].id
+                           } catch(e){
+                            input.value = ''
+                           }  
+                           break
+
+                    case 'date':
+
+                            const dateStr = record[field.name].replace(' ','T').trim(); 
+                            if(dateStr != ''){
+                            let dateObj = new Date(dateStr);
+
+                            // Convert to local timezone
+                            let localDate = new Date(dateObj.getTime() - (dateObj.getTimezoneOffset() * 60000));
+                            
+                            // Format the date for input field
+                            let formattedDate = localDate.toISOString().split('.')[0];
+                            
+                            input.value = formattedDate
+                            }
+
+                            break
+
+                    default: 
+                            input.value = record[field.name]
+                            break
+                            
+               }
+            }) 
 
             const idInput = document.getElementById(`${collectionName}_id`)
             idInput.value = recordId
@@ -372,8 +541,13 @@ delSelected = function (collName){
 createRecord = function (collName){
     let obj={}
     collection.schema.forEach(field => {
-         const id= `${collName}_${field.name}`
-            obj[field.name]= getVal(id)      
+        const id= `${collName}_${field.name}`
+        if(field.type == 'json'){
+            obj[field.name] = jsonEditors[`json_${field.name}`].getValue()
+        } 
+        else{
+            obj[field.name]= getVal(id,field.type)
+          }      
         })
     console.log('Creating ...')
     console.log(obj)
@@ -386,15 +560,22 @@ updateRecord = function (collName,id){
         let obj={}
         collection.schema.forEach(field => {
              const id= `${collName}_${field.name}`
-                obj[field.name]= getVal(id)      
+
+                let v 
+                if(field.type == 'json'){
+                    v = jsonEditors[`json_${field.name}`].getValue()
+                } 
+                else
+                 { 
+                  v = getVal(id,field.type)
+                 }
+                // alert(`V for ${field.type} is ${v}` )
+                
+                obj[field.name]= v      
             })
         
         obj['id']=id
-        
-        
-
-        console.log('Updating ...')
-        console.log(obj)
+   
         globUpdateRecord(collName,obj)
         
         reGenerateEditorTable()
