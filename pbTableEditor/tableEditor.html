@@ -3,8 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Table Editor</title>
+    <title>Medical Record Editor</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css"/>
+    <script src="https://cdn.jsdelivr.net/gh/pocketbase/js-sdk@latest/dist/pocketbase.umd.js"></script>
+   
+    
+    <!--- required for adding/editing json fields-->
+    <script src="https://cdn.jsdelivr.net/npm/@json-editor/json-editor@latest/dist/jsoneditor.min.js"></script>
+    
 </head>
 <body>
   <div class="container">
@@ -16,80 +22,163 @@
   </div>
 </body>
 
-  <script src="pbTableEditor.js"></script>
- 
-  <script src="collections.js"></script>
+  <script src="/js/pbTableEditor.js"></script>
+  <script src="/js/collections.js"></script>
   
   <script>
    
-   // Sample data
   
-   //*
-    const collection = 
-    {
-        "name": "spaces",
-        "schema": [
-            { "name": "person", "type": "text" },
-            { "name": "spacename", "type": "text" },
-            { "name": "desc", "type": "editor" }
-        ]
-        
-    }
-
-   const records = [
-        { "id": "111", "spacename": "Space 1" ,"person": "Pran","desc":"villain"},
-        { "id": "222", "spacename": "Space 2" ,"person": "Mehmood","desc":"comedian"},
-        { "id": "333", "spacename": "Space 3" ,"person": "Raj Kapoor","desc":"hero"},
-        { "id": "444", "spacename": "Space 4" ,"person": "Sreedevi","desc":"heroine"}
-        
-    ]
-  //*/
-
    
-  /*
-   //Use this if you include the Pocketbase schema in collections.js
+   const theCollection = 'medicalrecords'
+   let collection = {}
+   
+   for(let k=0; k < collections.length; k++){
+      if(collections[k].name == theCollection){
+          collection = collections[k]
+          break
+      }
+   }
 
-   let collection = collections[11]; 
    let records = [];
-  //*/
+  
+   let expandedRelations = {};
+      expandedRelations['the_user'] = []
+      expandedRelations['doctor'] =  [] 
+     
 
   function getRecords(collectionName){
-          //Fetch the current list of Pocketbase collection records
-           console.log('Fetching records of '+collectionName)
-           return records 
-    
+       records = null; 
+
+         //Fetch expandable records 
+         //expected in this particular collection only
+           pb.collection('users').getFullList({
+        
+            filter: 'type ~ "patient" || type ~ "doctor"'
+           }).then((expandedrecs)=>{
+                
+                  
+              for(let i=0; i < expandedrecs.length; i++){
+                  rec = expandedrecs[i];
+
+                  if(rec.type.indexOf('patient') != -1)
+                   expandedRelations['the_user'].push(rec);
+                  
+                   if(rec.type.indexOf('doctor') != -1)
+                      expandedRelations['doctor'].push(rec);
+                  }
+                
+            
+             }
+           )
+         
+           var intvl = setInterval(function() {  
+           
+              //If we found all the expanded relations then...  
+              if(expandedRelations.the_user){
+                
+                clearInterval(intvl); //important to stop the timer!!
+
+               //Fetch the current list of Pocketbase collection records
+                 pb.collection(collectionName).getFullList({
+                        sort: '-created',     
+                      expand: 'the_user,doctor'
+                    
+                    }).then((recs)=>{
+                        records = recs
+                
+                    })
+                 return 
+                }
+
+                 },
+                 100)    
+     
+      
+     }
+
+     
+     let usrtype
+
+     try {
+      usrtype = getCurrentUser().type.join(',')
+     }catch(eee){
+       alert("Not logged in")
+       window.location.href="/login.html"
      }
 
    //This is defined in pbTableEditor.js  
    generateEditorTable(collection,
         'tableContainer',
+        `<small><details>
+          <summary>usage</summary>
+          <ul>
+          <li>Only doctors or nurses can create a record.</li>
+          <li>Any doctor or nurse can update any record.</li>
+          <li>Patients can see only their own records.</li>
+          <li>Deletion can only be done by an authorized person.</li> 
+          </ul>
+          </details>
+          </small>
+          
+          `,
          getRecords, //function pointer to the function that gets collection records
-        function(collName,Id){ alert('A record is deleted from '+collName)}, //function pointer to delete one record
-        function(collName,Obj){alert('An object is added to '+collName)}, //function pointer to create record
-        function(collName,Obj){alert('An object is updated in '+collName)}, //function pointer to update record 
+        function(collName,Id){ 
+            
+                pb.collection(collName).delete(Id).then((r)=>{
+                    alert('A record is deleted from '+collName)
+                 })
+                 .catch((e)=>{
+                  alert(`Deletion is currently not allowed for ${usrtype}`)
+                  })
+
+               }, //function pointer to delete one record
+        function(collName,Obj){
+             
+             pb.collection(collName).create(Obj).then((r)=>{
+                alert('An object is added in '+collName)
+                console.log("Created:")
+                console.log(r)
+            
+                }).catch((e)=>{
+                  alert(`Creation is currently not allowed for ${usrtype}`)
+                  })
+
+                
+                }, //function pointer to create record
+        function(collName,Obj){
+                pb.collection(collName).update(Obj.id, Obj). 
+                 then((res)=>{
+                    alert('An object is updated in '+collName)
+                    console.log("Updated: ")
+                    console.log(res)
+                    }).catch((e)=>{
+                      alert(`Updation is currently not allowed for ${usrtype}`)
+                  })
+                }, //function pointer to update record 
+        
         function(collName,ArrayOfIds){alert('Some records are deleted from '+collName)}, //function pointer to multiple deletes 
+           
+        expandedRelations,
 
-            //Object that expands 'relations' type fields
-            { "nurseoncall": [
-                  {
-                    "id":"abcedfg",
-                    "text":"Srilatha"
-                  }  
-                ],
-               "attendedby": [
-                  {  "id":"xyzlmnop",
-                    "text":"Sreejith"
-
-                  }
-               ],
-               "patient":[
-                  {
-                    "id":"uvwxyzrst",
-                    "text":"Nikesh"
-                  }
-               ] 
-
-            }
+           //Schema of JSON fields:     
+           {"record":   {
+                        "bloodpressure": {
+                        "type": "string"
+                        },
+                        "diabetes": {
+                        "type": "string",
+                        "default": "No diabetes",
+                        "enum": [
+                            "No diabetes", 
+                            "Type I diabetes",
+                            "Type II diabetes"
+                        ]
+                        },
+                        "temperature": {
+                        "type": "number"
+                        }
+                    }
+             }         
 
             );
 
