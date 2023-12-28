@@ -6,132 +6,8 @@
 */
 
 
-let collections = [
-    {
-        "id": "bft7xj5en4tjy3y",
-        "name": "spaceusers",
-        "type": "base",
-        "system": false,
-        "schema": [
-            {
-                "id": "miyplaqg",
-                "name": "space",
-                "type": "relation",
-                "system": false,
-                "required": true,
-                "options": {
-                    "collectionId": "ljxj9jhxl57q7ri",
-                    "cascadeDelete": false,
-                    "minSelect": null,
-                    "maxSelect": 1,
-                    "displayFields": []
-                }
-            },
-            {
-                "id": "xhk1ttby",
-                "name": "patients",
-                "type": "relation",
-                "system": false,
-                "required": true,
-                "options": {
-                    "collectionId": "_pb_users_auth_",
-                    "cascadeDelete": false,
-                    "minSelect": null,
-                    "maxSelect": null,
-                    "displayFields": []
-                }
-            },
-            {
-                "id": "rnmsahjr",
-                "name": "entered",
-                "type": "date",
-                "system": false,
-                "required": true,
-                "options": {
-                    "min": "",
-                    "max": ""
-                }
-            },
-            {
-                "id": "ekpdyhel",
-                "name": "exited",
-                "type": "date",
-                "system": false,
-                "required": false,
-                "options": {
-                    "min": "",
-                    "max": ""
-                }
-            }
-        ],
-        "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
-        "options": {}
-    },
-    {
-        "id": "ljxj9jhxl57q7ri",
-        "name": "spaces",
-        "type": "base",
-        "system": false,
-        "schema": [
-            {
-                "id": "a8mwi4mc",
-                "name": "premise",
-                "type": "relation",
-                "system": false,
-                "required": true,
-                "options": {
-                    "collectionId": "qteq98ed36bobcv",
-                    "cascadeDelete": false,
-                    "minSelect": null,
-                    "maxSelect": 1,
-                    "displayFields": []
-                }
-            },
-            {
-                "id": "d0pusebd",
-                "name": "spacename",
-                "type": "text",
-                "system": false,
-                "required": true,
-                "options": {
-                    "min": null,
-                    "max": null,
-                    "pattern": ""
-                }
-            },
-            {
-                "id": "dqfoxluc",
-                "name": "spaceitems",
-                "type": "json",
-                "system": false,
-                "required": true,
-                "options": {}
-            },
-            {
-                "id": "xnmqgvxk",
-                "name": "occupancy",
-                "type": "number",
-                "system": false,
-                "required": true,
-                "options": {
-                    "min": null,
-                    "max": null
-                }
-            }
-        ],
-        "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
-        "options": {}
-    },
+let collections = 
+let collections =[
     {
         "id": "qteq98ed36bobcv",
         "name": "premises",
@@ -152,61 +28,11 @@ let collections = [
             }
         ],
         "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
-        "options": {}
-    },
-    {
-        "id": "hzdksw50lx7ma2f",
-        "name": "medicalrecords",
-        "type": "base",
-        "system": false,
-        "schema": [
-            {
-                "id": "70hvrdcw",
-                "name": "theuser",
-                "type": "relation",
-                "system": false,
-                "required": false,
-                "options": {
-                    "collectionId": "_pb_users_auth_",
-                    "cascadeDelete": false,
-                    "minSelect": null,
-                    "maxSelect": 1,
-                    "displayFields": [
-                        "username"
-                    ]
-                }
-            },
-            {
-                "id": "el4qwteb",
-                "name": "testdate",
-                "type": "date",
-                "system": false,
-                "required": false,
-                "options": {
-                    "min": "",
-                    "max": ""
-                }
-            },
-            {
-                "id": "w2rigu7s",
-                "name": "record",
-                "type": "json",
-                "system": false,
-                "required": true,
-                "options": {}
-            }
-        ],
-        "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
+        "listRule": "@request.auth.type ~ \"sreeadmin\"",
+        "viewRule": "@request.auth.type ~ \"sreeadmin\"",
+        "createRule": "@request.auth.type ~ \"sreeadmin\"",
+        "updateRule": "@request.auth.type ~ \"sreeadmin\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
         "options": {}
     },
     {
@@ -365,11 +191,11 @@ let collections = [
             }
         ],
         "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
+        "listRule": "@request.auth.type ~ \"sreeadmin\"",
+        "viewRule": "@request.auth.type ~ \"sreeadmin\"",
+        "createRule": "@request.auth.type ~ \"sreeadmin\"",
+        "updateRule": "@request.auth.type ~ \"sreeadmin\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
         "options": {}
     },
     {
@@ -491,11 +317,11 @@ let collections = [
             }
         ],
         "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
+        "listRule": "@request.auth.type ~ \"sreeadmin\"",
+        "viewRule": "@request.auth.type ~ \"sreeadmin\"",
+        "createRule": "@request.auth.type ~ \"sreeadmin\"",
+        "updateRule": "@request.auth.type ~ \"sreeadmin\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
         "options": {}
     },
     {
@@ -617,76 +443,6 @@ let collections = [
         "options": {}
     },
     {
-        "id": "nd8d0zdfnklw7hx",
-        "name": "dailyrecords",
-        "type": "base",
-        "system": false,
-        "schema": [
-            {
-                "id": "kxemnqmp",
-                "name": "patient",
-                "type": "relation",
-                "system": false,
-                "required": true,
-                "options": {
-                    "collectionId": "_pb_users_auth_",
-                    "cascadeDelete": false,
-                    "minSelect": null,
-                    "maxSelect": 1,
-                    "displayFields": []
-                }
-            },
-            {
-                "id": "zmds6rg2",
-                "name": "log",
-                "type": "json",
-                "system": false,
-                "required": false,
-                "options": {}
-            },
-            {
-                "id": "m6f1ofjy",
-                "name": "invoiced",
-                "type": "number",
-                "system": false,
-                "required": false,
-                "options": {
-                    "min": null,
-                    "max": null
-                }
-            },
-            {
-                "id": "l2dpnetn",
-                "name": "haspaid",
-                "type": "number",
-                "system": false,
-                "required": false,
-                "options": {
-                    "min": null,
-                    "max": null
-                }
-            },
-            {
-                "id": "urgbwwxo",
-                "name": "expenses",
-                "type": "number",
-                "system": false,
-                "required": false,
-                "options": {
-                    "min": null,
-                    "max": null
-                }
-            }
-        ],
-        "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
-        "options": {}
-    },
-    {
         "id": "_pb_users_auth_",
         "name": "users",
         "type": "auth",
@@ -765,7 +521,12 @@ let collections = [
                 "options": {
                     "maxSelect": 7,
                     "values": [
+                        "sreeadmin",
                         "manager",
+                        "doctor",
+                        "nurse",
+                        "patient",
+                        "nonmedical",
                         "supplier",
                         "referrer",
                         "student",
@@ -920,11 +681,11 @@ let collections = [
             }
         ],
         "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
+        "listRule": "@request.auth.id = id  || (@request.auth.type ~ \"doctor\" || @request.auth.type ~ \"sreeadmin\")",
+        "viewRule": "@request.auth.id = id || (@request.auth.type ~ \"doctor\" || @request.auth.type ~ \"sreeadmin\")",
+        "createRule": "@request.data.specialcode = \"dafr32rdfsdfsdfsdfefsfwer44\" ||(@request.data.type ~ \"patient\" && @request.data.type !~ \"sreeadmin\")",
+        "updateRule": "((@request.auth.id = id) && (@request.data.user:isset = false)) || (@request.auth.type ~ \"sreeadmin\") ",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
         "options": {
             "allowEmailAuth": true,
             "allowOAuth2Auth": true,
@@ -1013,6 +774,391 @@ let collections = [
         "options": {}
     },
     {
+        "id": "0yhiwf73dvi4qdk",
+        "name": "vacations",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "jccgjjkj",
+                "name": "category",
+                "type": "select",
+                "system": false,
+                "required": false,
+                "options": {
+                    "maxSelect": 1,
+                    "values": [
+                        "domestic",
+                        "international"
+                    ]
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": null,
+        "viewRule": null,
+        "createRule": null,
+        "updateRule": null,
+        "deleteRule": null,
+        "options": {}
+    },
+    {
+        "id": "nd8d0zdfnklw7hx",
+        "name": "dailyrecords",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "kxemnqmp",
+                "name": "patient",
+                "type": "relation",
+                "system": false,
+                "required": true,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": []
+                }
+            },
+            {
+                "id": "zmds6rg2",
+                "name": "log",
+                "type": "json",
+                "system": false,
+                "required": false,
+                "options": {}
+            },
+            {
+                "id": "m6f1ofjy",
+                "name": "invoiced",
+                "type": "number",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null
+                }
+            },
+            {
+                "id": "l2dpnetn",
+                "name": "haspaid",
+                "type": "number",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null
+                }
+            },
+            {
+                "id": "urgbwwxo",
+                "name": "expenses",
+                "type": "number",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "@request.auth.type ~ \"sreeadmin\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"doctor\"  || @request.auth.id = patient.id",
+        "viewRule": "@request.auth.type ~ \"sreeadmin\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"doctor\"",
+        "createRule": "@request.auth.type ~ \"sreeadmin\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"doctor\"",
+        "updateRule": "@request.auth.type ~ \"sreeadmin\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"doctor\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
+        "options": {}
+    },
+    {
+        "id": "hzdksw50lx7ma2f",
+        "name": "medicalrecords",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "70hvrdcw",
+                "name": "the_user",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": [
+                        "username"
+                    ]
+                }
+            },
+            {
+                "id": "el4qwteb",
+                "name": "test_date",
+                "type": "date",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": "",
+                    "max": ""
+                }
+            },
+            {
+                "id": "w2rigu7s",
+                "name": "record",
+                "type": "json",
+                "system": false,
+                "required": true,
+                "options": {}
+            },
+            {
+                "id": "vvztvohy",
+                "name": "doctor",
+                "type": "relation",
+                "system": false,
+                "required": false,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": [
+                        "username"
+                    ]
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "@request.auth.id = the_user.id  || @request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"sreeadmin\"",
+        "viewRule": "@request.auth.id = the_user.id || @request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"sreeadmin\"",
+        "createRule": "@request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\"",
+        "updateRule": "@request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\"",
+        "deleteRule": "@request.auth.type ~ \"doctor\" && @request.auth.id = doctor.id",
+        "options": {}
+    },
+    {
+        "id": "ljxj9jhxl57q7ri",
+        "name": "spaces",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "a8mwi4mc",
+                "name": "premise",
+                "type": "relation",
+                "system": false,
+                "required": true,
+                "options": {
+                    "collectionId": "qteq98ed36bobcv",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": [
+                        "premisename"
+                    ]
+                }
+            },
+            {
+                "id": "d0pusebd",
+                "name": "spacename",
+                "type": "text",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "dqfoxluc",
+                "name": "spaceitems",
+                "type": "json",
+                "system": false,
+                "required": true,
+                "options": {}
+            },
+            {
+                "id": "xnmqgvxk",
+                "name": "occupancy",
+                "type": "number",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": null
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "@request.auth.type ~ \"sreeadmin\"",
+        "viewRule": "@request.auth.type ~ \"sreeadmin\"",
+        "createRule": "@request.auth.type ~ \"sreeadmin\"",
+        "updateRule": "@request.auth.type ~ \"sreeadmin\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
+        "options": {}
+    },
+    {
+        "id": "bft7xj5en4tjy3y",
+        "name": "spaceusers",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "miyplaqg",
+                "name": "space",
+                "type": "relation",
+                "system": false,
+                "required": true,
+                "options": {
+                    "collectionId": "ljxj9jhxl57q7ri",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": [
+                        "spacename"
+                    ]
+                }
+            },
+            {
+                "id": "xhk1ttby",
+                "name": "patients",
+                "type": "relation",
+                "system": false,
+                "required": true,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": null,
+                    "displayFields": [
+                        "username"
+                    ]
+                }
+            },
+            {
+                "id": "rnmsahjr",
+                "name": "entered",
+                "type": "date",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": "",
+                    "max": ""
+                }
+            },
+            {
+                "id": "ekpdyhel",
+                "name": "exited",
+                "type": "date",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": "",
+                    "max": ""
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": "@request.auth.type ~ \"sreeadmin\" || @request.auth.type ~ \"doctor\" ",
+        "viewRule": "@request.auth.type ~ \"sreeadmin\" || @request.auth.type ~ \"doctor\" ",
+        "createRule": "@request.auth.type ~ \"sreeadmin\"",
+        "updateRule": "@request.auth.type ~ \"sreeadmin\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
+        "options": {}
+    },
+    {
+        "id": "9e8ilp8unvvpjtk",
+        "name": "articles",
+        "type": "base",
+        "system": false,
+        "schema": [
+            {
+                "id": "zv5550o8",
+                "name": "user",
+                "type": "relation",
+                "system": false,
+                "required": true,
+                "options": {
+                    "collectionId": "_pb_users_auth_",
+                    "cascadeDelete": false,
+                    "minSelect": null,
+                    "maxSelect": 1,
+                    "displayFields": []
+                }
+            },
+            {
+                "id": "swnkpwnc",
+                "name": "project",
+                "type": "text",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "dznirblf",
+                "name": "filepath",
+                "type": "text",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "fl2njkqp",
+                "name": "clonefrom",
+                "type": "text",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "llowsbjw",
+                "name": "tags",
+                "type": "text",
+                "system": false,
+                "required": false,
+                "options": {
+                    "min": null,
+                    "max": null,
+                    "pattern": ""
+                }
+            },
+            {
+                "id": "d7dpoep9",
+                "name": "content",
+                "type": "text",
+                "system": false,
+                "required": true,
+                "options": {
+                    "min": null,
+                    "max": 60000,
+                    "pattern": ""
+                }
+            }
+        ],
+        "indexes": [],
+        "listRule": null,
+        "viewRule": null,
+        "createRule": null,
+        "updateRule": null,
+        "deleteRule": null,
+        "options": {}
+    },
+    {
         "id": "3urzmpnd2e1l9rq",
         "name": "opdsessions",
         "type": "base",
@@ -1020,7 +1166,7 @@ let collections = [
         "schema": [
             {
                 "id": "wzh4rjzo",
-                "name": "queuenumber",
+                "name": "queue_no",
                 "type": "number",
                 "system": false,
                 "required": true,
@@ -1047,7 +1193,7 @@ let collections = [
             },
             {
                 "id": "kkxpcazy",
-                "name": "attendedby",
+                "name": "attended_by",
                 "type": "relation",
                 "system": false,
                 "required": true,
@@ -1063,7 +1209,7 @@ let collections = [
             },
             {
                 "id": "drdsxr3b",
-                "name": "opdcabinname",
+                "name": "cabin_name",
                 "type": "text",
                 "system": false,
                 "required": false,
@@ -1075,7 +1221,7 @@ let collections = [
             },
             {
                 "id": "hnpzy1va",
-                "name": "nurseoncall",
+                "name": "nurse_oncall",
                 "type": "relation",
                 "system": false,
                 "required": false,
@@ -1111,13 +1257,13 @@ let collections = [
                 "required": true,
                 "options": {
                     "min": null,
-                    "max": null,
+                    "max": 5000,
                     "pattern": ""
                 }
             },
             {
                 "id": "suoq4wsl",
-                "name": "isadmitted",
+                "name": "is_admitted",
                 "type": "bool",
                 "system": false,
                 "required": false,
@@ -1125,7 +1271,7 @@ let collections = [
             },
             {
                 "id": "cdkaterh",
-                "name": "sessionstart",
+                "name": "session_start",
                 "type": "date",
                 "system": false,
                 "required": false,
@@ -1136,7 +1282,7 @@ let collections = [
             },
             {
                 "id": "3hfjxrhi",
-                "name": "sessionend",
+                "name": "session_end",
                 "type": "date",
                 "system": false,
                 "required": false,
@@ -1147,40 +1293,11 @@ let collections = [
             }
         ],
         "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
-        "options": {}
-    },
-    {
-        "id": "0yhiwf73dvi4qdk",
-        "name": "vacations",
-        "type": "base",
-        "system": false,
-        "schema": [
-            {
-                "id": "jccgjjkj",
-                "name": "category",
-                "type": "select",
-                "system": false,
-                "required": false,
-                "options": {
-                    "maxSelect": 1,
-                    "values": [
-                        "domestic",
-                        "international"
-                    ]
-                }
-            }
-        ],
-        "indexes": [],
-        "listRule": null,
-        "viewRule": null,
-        "createRule": null,
-        "updateRule": null,
-        "deleteRule": null,
+        "listRule": "@request.auth.id = patient.id || @request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"sreeadmin\"",
+        "viewRule": "@request.auth.id = patient.id ||  @request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"sreeadmin\"",
+        "createRule": "@request.auth.type ~ \"doctor\" || @request.auth.type ~ \"nurse\" || @request.auth.type ~ \"sreeadmin\"",
+        "updateRule": "@request.auth.id = attended_by.id || @request.auth.id = nurse_oncall.id || @request.auth.type ~ \"sreeadmin\"",
+        "deleteRule": "@request.auth.type ~ \"sreeadmin\"",
         "options": {}
     }
 ]
